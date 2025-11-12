@@ -1,26 +1,166 @@
 @import "tailwindcss";
 
+/* Base design tokens */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* neutrals */
+  --background: #FFFEF9; /* Off-White */
+  --foreground: #2C2C2C; /* Charcoal */
+
+  /* primary + accents */
+  --lavender: #E6E6FA;         /* Primary */
+  --periwinkle: #B4B4DC;       /* Hover/borders */
+  --blush: #FFB3D9;            /* Warm accent */
+  --coral: #FF6B9D;            /* Coral Rose - CTAs */
+  --gold: #F4D03F;             /* Champagne Gold */
+  --mint: #F5FFFA;             /* Mint Cream */
+  --deep-purple: #9370DB;      /* Headings/emphasis */
+  --peach: #FFDAB9;            /* Secondary warm */
+  --soft-sky: #E0F4FF;         /* Cool balance */
+
+  /* neutrals extended */
+  --off-white: #FFFEF9;
+  --light-gray: #F8F9FA;
+  --charcoal: #2C2C2C;
+  --slate: #6C757D;
+
+  /* gradient presets */
+  --gradient-lavender: radial-gradient(1200px 600px at -10% -10%, color-mix(in oklab, var(--lavender) 85%, var(--off-white) 15%) 0%, transparent 60%),
+    radial-gradient(900px 500px at 110% -20%, color-mix(in oklab, var(--blush) 50%, var(--off-white) 50%) 0%, transparent 55%),
+    linear-gradient(135deg, color-mix(in oklab, var(--gold) 20%, var(--off-white) 80%) 0%, color-mix(in oklab, var(--lavender) 70%, var(--off-white) 30%) 100%);
 }
 
+/* Tailwind v4 themes via CSS tokens */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+  /* expose brand colors to Tailwind utilities: text-primary, bg-primary, etc. */
+  --color-primary: var(--lavender);
+  --color-periwinkle: var(--periwinkle);
+  --color-blush: var(--blush);
+  --color-coral: var(--coral);
+  --color-gold: var(--gold);
+  --color-mint: var(--mint);
+  --color-deeppurple: var(--deep-purple);
+  --color-peach: var(--peach);
+  --color-sky: var(--soft-sky);
+  --color-offwhite: var(--off-white);
+  --color-graylight: var(--light-gray);
+  --color-charcoal: var(--charcoal);
+  --color-slate: var(--slate);
+
+  --font-body: var(--font-body);
+  --font-heading: var(--font-heading);
+  --font-handwritten: var(--font-handwritten);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #2C2C2C; /* Charcoal background in dark */
+    --foreground: #FFFEF9; /* Off-white text */
+
+    /* deepen accents slightly for dark mode while keeping the palette */
+    --lavender: #dcdcf7;
+    --periwinkle: #9fa0cf;
+    --blush: #ff9fcd;
+    --coral: #ff5c93;
+    --gold: #dcbf2e;
+    --mint: #e9fff7;
+    --deep-purple: #7f63cc;
+    --peach: #ffcfaa;
+    --soft-sky: #cfeaff;
+    --off-white: #1a1a1a; /* used only for mixing in gradients in dark */
+    --light-gray: #2f2f2f;
+    --charcoal: #f3f3f3; /* flipped for text helpers if used */
+    --slate: #c9cdd3;
+
+    --gradient-lavender: radial-gradient(1200px 600px at -10% -10%, color-mix(in oklab, var(--lavender) 70%, #0a0a0a 30%) 0%, transparent 60%),
+      radial-gradient(900px 500px at 110% -20%, color-mix(in oklab, var(--blush) 35%, #0a0a0a 65%) 0%, transparent 55%),
+      linear-gradient(135deg, color-mix(in oklab, var(--gold) 18%, #0a0a0a 82%) 0%, color-mix(in oklab, var(--lavender) 55%, #0a0a0a 45%) 100%);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Global defaults */
+html, body {
+  min-height: 100%;
 }
+
+html { scroll-behavior: smooth; }
+
+body {
+  color: var(--foreground);
+  font-family: var(--font-body), Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Helvetica Neue, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+  background-color: var(--background);
+  /* Subtle brand gradient */
+  background-image: var(--gradient-lavender);
+  background-attachment: fixed;
+  background-size: cover;
+}
+
+/* Heading font */
+h1, h2, h3, .heading-font {
+  /* Include explicit color-emoji fallbacks so emojis render in headings */
+  font-family: var(--font-heading), Pacifico, cursive, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji";
+}
+
+/* Explicit dark mode overrides (in addition to prefers-color-scheme) */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  --lavender: #dcdcf7; /* softened for dark */
+  --coral: #ff5c93;
+  --gold: #f2c200;
+  --gradient-lavender: radial-gradient(1200px 600px at -10% -10%, color-mix(in oklab, var(--lavender) 70%, #0a0a0a 30%) 0%, transparent 60%),
+    radial-gradient(900px 500px at 110% -20%, color-mix(in oklab, var(--coral) 35%, #0a0a0a 65%) 0%, transparent 55%),
+    linear-gradient(135deg, color-mix(in oklab, var(--gold) 18%, #0a0a0a 82%) 0%, color-mix(in oklab, var(--lavender) 55%, #0a0a0a 45%) 100%);
+}
+
+/* Reduced motion: tone down animations, parallax, and backgrounds */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+  .animated-gradient { animation: none !important; }
+}
+
+/* Utility helper classes for lavender-themed backgrounds */
+.bg-lavender-gradient {
+  background-image: var(--gradient-lavender) !important;
+}
+
+.bg-lavender-radial {
+  background-image: radial-gradient(600px 600px at 10% 10%, color-mix(in oklab, var(--lavender) 85%, var(--off-white) 15%), transparent 55%),
+    radial-gradient(900px 700px at 90% 0%, color-mix(in oklab, var(--blush) 40%, var(--off-white) 60%), transparent 60%),
+    linear-gradient(180deg, color-mix(in oklab, var(--lavender) 75%, var(--off-white) 25%), color-mix(in oklab, var(--gold) 16%, var(--off-white) 84%));
+}
+
+.bg-lavender-aurora {
+  background-image: radial-gradient(650px 300px at 15% 30%, color-mix(in oklab, var(--lavender) 90%, var(--off-white) 10%), transparent 60%),
+    radial-gradient(500px 250px at 85% 25%, color-mix(in oklab, var(--blush) 38%, var(--off-white) 62%), transparent 60%),
+    radial-gradient(800px 350px at 50% 90%, color-mix(in oklab, var(--gold) 22%, var(--off-white) 78%), transparent 60%),
+    linear-gradient(120deg, color-mix(in oklab, var(--lavender) 70%, var(--off-white) 30%), color-mix(in oklab, var(--coral) 15%, var(--off-white) 85%));
+}
+
+/* Lavender-tinted deep shadow utility for cards */
+.shadow-lavender-2xl {
+  box-shadow: 0 25px 50px -12px color-mix(in oklab, var(--periwinkle) 45%, black 55%), 0 0 24px color-mix(in oklab, var(--lavender) 35%, transparent 65%);
+}
+
+/* Button glow + scale on hover for all buttons */
+button {
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+button:hover {
+  transform: translateZ(0) scale(1.05);
+  box-shadow: 0 0 18px color-mix(in oklab, var(--periwinkle) 65%, transparent 35%);
+}
+
+/* Reusable .btn utility for anchors-as-buttons */
+.btn {
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+.btn:hover {
+  transform: translateZ(0) scale(1.05);
+  box-shadow: 0 0 18px color-mix(in oklab, var(--periwinkle) 65%, transparent 35%);
+}
+
+/* Disable ligatures to avoid any font-driven glyph substitutions in headings */
+.no-liga { font-variant-ligatures: none; }
