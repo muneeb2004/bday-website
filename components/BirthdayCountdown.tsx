@@ -97,7 +97,7 @@ export default function BirthdayCountdown({
           <div className="pointer-events-none absolute inset-0 grid place-items-center">
             <div className="text-center">
               <div className="text-xs uppercase tracking-wide text-foreground/60">Days Left</div>
-              <FlipNumber value={toNext.days} className="text-4xl font-extrabold text-deeppurple" />
+              <FlipNumber value={toNext.days} className="text-4xl font-extrabold text-deeppurple dark:text-white" />
             </div>
           </div>
         </div>
@@ -127,7 +127,7 @@ export default function BirthdayCountdown({
 function FlipCard({ label, value, className = "" }: { label: string; value: number; className?: string }) {
   return (
     <div className={`rounded-xl bg-white/60 p-3 text-center shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-black/40 dark:ring-white/10 ${className}`}>
-      <FlipNumber value={value} className="text-2xl font-bold text-deeppurple" />
+      <FlipNumber value={value} className="text-2xl font-bold text-deeppurple dark:text-white" />
       <div className="text-xs uppercase tracking-wide text-foreground/60">{label}</div>
     </div>
   );

@@ -25,7 +25,7 @@ function computeAge(birthdate: Date | undefined): number | undefined {
 
 export default function FinalSurprise({
   friendName = "Meryem",
-  yourName = "Your Friend",
+  yourName = "Muneeb",
   age,
   birthdate,
   shareUrl,
@@ -100,18 +100,66 @@ export default function FinalSurprise({
     launchFireworks();
   }, [mounted, runOnce, launchFireworks]);
 
-  const onDownloadCertificate = useCallback(() => {
+  const onDownloadCertificate = useCallback(async (format: "png" | "jpeg" = "png") => {
     const svg = svgRef.current;
     if (!svg) return;
+    // Serialize SVG and resolve CSS variables so the standalone image isn't black
     const serializer = new XMLSerializer();
-    const source = serializer.serializeToString(svg);
-    const blob = new Blob([source], { type: "image/svg+xml;charset=utf-8" });
+    const rawSource = serializer.serializeToString(svg);
+    const resolveVars = (src: string) => {
+      const root = getComputedStyle(document.documentElement);
+      return src.replace(/var\((--[a-zA-Z0-9-]+)\)/g, (_m, name) => {
+        const val = root.getPropertyValue(name).trim();
+        // Fallback to white if token not found; prevents black fills
+        return val || "#ffffff";
+      });
+    };
+    const source = resolveVars(rawSource);
+    const svgUrl = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(source)}`;
+    // Draw into a canvas then export as PNG for better compatibility when sharing
+    const img = new Image();
+    // Prevent tainting; inline data URL is same-origin
+    img.crossOrigin = "anonymous";
+    const vw = 1100; // from viewBox width
+    const vh = 850;  // from viewBox height
+    const scale = Math.min(3, Math.max(1.5, Math.floor((window.devicePixelRatio || 2) * 2))); // crisp but safe
+    const canvas = document.createElement("canvas");
+    canvas.width = vw * scale;
+    canvas.height = vh * scale;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    // Optional solid backdrop for better readability when saved as PNG
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    await new Promise<void>((resolve, reject) => {
+      img.onload = () => {
+        try {
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          resolve();
+        } catch (e) {
+          reject(e);
+        }
+      };
+      img.onerror = () => reject(new Error("Failed to load SVG for export"));
+      img.src = svgUrl;
+    });
+
+    const mime = format === "jpeg" ? "image/jpeg" : "image/png";
+    const ext = format === "jpeg" ? "jpg" : "png";
+    let blob: Blob | null = await new Promise((resolve) => canvas.toBlob(resolve as any, mime, 0.95));
+    // Fallback for environments where toBlob might return null
+    if (!blob) {
+      const dataUrl = canvas.toDataURL(mime, 0.95);
+      const res = await fetch(dataUrl);
+      blob = await res.blob();
+    }
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     const cleanFriend = friendName.replace(/\s+/g, "_");
     const cleanYou = yourName.replace(/\s+/g, "_");
     a.href = url;
-    a.download = `Friendship-Certificate-${cleanFriend}-and-${cleanYou}.svg`;
+    a.download = `Friendship-Certificate-${cleanFriend}-and-${cleanYou}.${ext}`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -145,12 +193,12 @@ export default function FinalSurprise({
 
       <div className="mx-auto max-w-4xl">
         <div className="flex flex-col items-center gap-4 text-center">
-          <h2 className="text-2xl font-bold text-deeppurple">Final Surprise ✨</h2>
-          <p className="text-balance text-lg font-semibold">
+          <h2 className="text-2xl font-bold text-deeppurple dark:text-white">Final Surprise ✨</h2>
+          <p className="text-balance text-lg font-semibold text-deeppurple dark:text-white">
             {typeof resolvedAge === "number" ? (
-              <>Cheers to <span className="text-deeppurple">{resolvedAge}</span> years of awesomeness!</>
+              <>Cheers to <span className="text-deeppurple dark:text-white">{resolvedAge}</span> years of awesomeness!</>
             ) : (
-              <>Cheers to <span className="text-deeppurple">another</span> year of awesomeness!</>
+              <>Cheers to <span className="text-deeppurple dark:text-white">another</span> year of awesomeness!</>
             )}
           </p>
 
@@ -162,10 +210,16 @@ export default function FinalSurprise({
               <PartyPopper size={18} /> Celebrate
             </button>
             <button
-              onClick={onDownloadCertificate}
+              onClick={() => onDownloadCertificate("png")}
               className="btn inline-flex items-center gap-2 rounded-full border border-black/10 px-4 py-2 font-medium hover:bg-black/5 dark:border-white/15 dark:hover:bg-white/10"
             >
-              <Download size={18} /> Download Certificate
+              <Download size={18} /> Download PNG
+            </button>
+            <button
+              onClick={() => onDownloadCertificate("jpeg")}
+              className="btn inline-flex items-center gap-2 rounded-full border border-black/10 px-4 py-2 font-medium hover:bg-black/5 dark:border-white/15 dark:hover:bg-white/10"
+            >
+              <Download size={18} /> Download JPEG
             </button>
 
             {typeof navigator !== "undefined" && (navigator as any).share ? (
@@ -211,8 +265,8 @@ export default function FinalSurprise({
                 <text x="550" y="180" textAnchor="middle" fontSize="56" fontWeight="700" fill="var(--deep-purple)">
                   Friendship Certificate
                 </text>
-                <text x="550" y="240" textAnchor="middle" fontSize="26" fill="var(--slate)">
-                  Celebrating a bond sprinkled with confetti and stardust
+                <text x="550" y="240" textAnchor="middle" fontSize="26" fill="var(--charcoal)">
+                  Here's to our never ending friendship
                 </text>
 
                 {/* Names */}
@@ -222,7 +276,7 @@ export default function FinalSurprise({
                 <text x="880" y="420" textAnchor="middle" fontSize="40" fontWeight="600" fill="var(--charcoal)">
                   {friendName}
                 </text>
-                <text x="550" y="380" textAnchor="middle" fontSize="24" fill="var(--slate)">
+                <text x="550" y="380" textAnchor="middle" fontSize="24" fill="var(--charcoal)">
                   and
                 </text>
 

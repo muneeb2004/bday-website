@@ -18,8 +18,17 @@ export type YearMemories = {
 
 export default function MemoryTimelineClient({ groups }: { groups: YearMemories[] }) {
   const total = useMemo(() => groups.reduce((acc, g) => acc + g.photos.length, 0), [groups]);
-  const firstWithPhotos = Math.max(0, groups.findIndex((g) => g.photos.length > 0));
-  const [selected, setSelected] = useState(firstWithPhotos === -1 ? 0 : firstWithPhotos);
+  // Expanded view by default for all years
+  const [openYears, setOpenYears] = useState<Set<number>>(
+    () => new Set(groups.map((_, idx) => idx))
+  );
+  const toggleYear = (idx: number) =>
+    setOpenYears((prev) => {
+      const next = new Set(prev);
+      if (next.has(idx)) next.delete(idx);
+      else next.add(idx);
+      return next;
+    });
 
   // Lightbox state
   const [lightbox, setLightbox] = useState<{ open: boolean; yearIdx: number; photoIdx: number } | null>(null);
@@ -40,7 +49,7 @@ export default function MemoryTimelineClient({ groups }: { groups: YearMemories[
   return (
     <div className="relative mx-auto max-w-6xl px-4 py-12">
       {/* Top summary */}
-      <div className="mb-8 flex items-center justify-between">
+      <div className="mb-8 flex items-center justify-between pl-12 sm:pl-16">
         <h3 className="text-2xl font-bold text-deeppurple">Memory Timeline</h3>
         <div className="rounded-full border border-black/10 px-4 py-1 text-sm dark:border-white/15">
           Our Favorite Moments: <span className="font-semibold">{total}</span>
@@ -56,8 +65,8 @@ export default function MemoryTimelineClient({ groups }: { groups: YearMemories[
             key={g.year}
             group={g}
             index={idx}
-            isOpen={idx === selected}
-            onSelect={() => setSelected(idx)}
+            isOpen={openYears.has(idx)}
+            onToggle={() => toggleYear(idx)}
             onOpenLightbox={(photoIdx) => openLightbox(idx, photoIdx)}
           />
         ))}
@@ -79,13 +88,13 @@ function YearCard({
   group,
   index,
   isOpen,
-  onSelect,
+  onToggle,
   onOpenLightbox,
 }: {
   group: YearMemories;
   index: number;
   isOpen: boolean;
-  onSelect: () => void;
+  onToggle: () => void;
   onOpenLightbox: (photoIdx: number) => void;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
@@ -112,15 +121,15 @@ function YearCard({
       className="relative ml-12 rounded-3xl bg-white/60 p-4 shadow-lavender-2xl ring-1 ring-black/5 backdrop-blur dark:bg-black/40 dark:ring-white/10 sm:ml-16 sm:p-6"
     >
       {/* Timeline node */}
-      <div className="absolute -left-9 top-4 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-black shadow sm:-left-11 sm:h-7 sm:w-7">
-        <span className="text-xs font-bold">{group.year}</span>
+      <div className="absolute -left-12 top-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary text-black shadow ring-2 ring-white/70 dark:ring-black/40 sm:-left-14 sm:h-12 sm:w-12">
+        <span className="text-[11px] font-extrabold sm:text-sm">{group.year}</span>
       </div>
 
       {/* Header */}
       <div className="flex items-center justify-between gap-4">
         <h3 className="text-xl font-semibold text-deeppurple sm:text-2xl">{group.year}</h3>
         <button
-          onClick={onSelect}
+          onClick={onToggle}
           className="group rounded-full border border-black/10 px-3 py-1 text-sm hover:bg-black/5 dark:border-white/15 dark:hover:bg-white/10"
         >
           <span className="mr-1 align-middle">{isOpen ? "Hide" : "View"}</span>
@@ -226,7 +235,7 @@ function Polaroid({ photo, index, onOpen }: { photo: MemoryPhoto; index: number;
             </motion.span>
           ))}
         </div>
-        <div className="mt-2 text-center text-sm text-neutral-700 font-[var(--font-handwritten),cursive] dark:text-neutral-200">
+        <div className="mt-2 text-center text-sm text-black font-[var(--font-handwritten),cursive]">
           {photo.caption}
         </div>
       </div>

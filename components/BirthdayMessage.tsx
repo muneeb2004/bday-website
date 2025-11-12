@@ -38,20 +38,20 @@ export default function BirthdayMessage({
         initial="hidden"
         whileInView="show"
         viewport={{ once: true, amount: 0.25 }}
-        className="rounded-3xl bg-white/60 p-8 shadow-sm ring-1 ring-black/5 backdrop-blur dark:bg-black/40 dark:ring-white/10"
+        className="rounded-3xl bg-white/80 p-8 shadow-sm ring-1 ring-black/10 backdrop-blur-sm dark:bg-black/50 dark:ring-white/15"
       >
         <motion.h2
           initial={{ opacity: 0, y: 10 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, ease: EASE }}
-          className="mb-4 text-center text-3xl font-extrabold tracking-tight text-deeppurple"
+          className="mb-4 text-center text-3xl font-extrabold tracking-tight text-deeppurple dark:text-white"
         >
           {title}
         </motion.h2>
 
         {/* word-by-word message */}
-        <p className="mx-auto max-w-prose text-center text-lg leading-8 text-foreground/90">
+        <p className="mx-auto max-w-prose text-center text-lg leading-8 text-charcoal dark:text-white/90">
           {words.map((w, i) => (
             <motion.span
               key={i}
@@ -76,7 +76,7 @@ export default function BirthdayMessage({
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 + i * 0.1, ease: EASE }}
-                className="rounded-2xl border border-periwinkle/50 bg-white/70 p-4 text-center text-foreground/90 shadow-sm backdrop-blur dark:bg-black/40"
+                className="rounded-2xl border border-periwinkle/50 bg-white/80 p-4 text-center text-charcoal shadow-sm backdrop-blur-sm dark:bg-black/50 dark:text-white/90"
               >
                 <span className="font-[var(--font-handwritten),cursive] text-xl text-coral">“{q}”</span>
               </motion.div>

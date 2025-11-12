@@ -106,16 +106,17 @@ function SparkleOverlay({ show }: { show: boolean }) {
     <AnimatePresence>
       {show && (
         <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/20 backdrop-blur-[1px]"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/25 backdrop-blur-[1.5px]"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
+          {/* sparkles field */}
           <div className="pointer-events-none absolute inset-0">
             {sparkles.map((s) => (
               <motion.span
                 key={s.id}
-                className="absolute text-gold drop-shadow-[0_0_6px_rgba(255,215,0,0.8)]"
+                className="absolute text-gold drop-shadow-[0_0_10px_rgba(255,215,0,0.9)]"
                 style={{ left: `${s.x}%`, top: `${s.y}%` }}
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: [0, 1, 0], scale: [0, s.scale, 0] }}
@@ -125,6 +126,30 @@ function SparkleOverlay({ show }: { show: boolean }) {
               </motion.span>
             ))}
           </div>
+
+          {/* center gift opening animation */}
+          <div className="relative grid h-36 w-36 place-items-center">
+            {/* Gift box */}
+            <div className="absolute bottom-0 h-24 w-28 rounded-b-md bg-[#ffb6c1] shadow-[0_8px_24px_rgba(0,0,0,0.25)]" />
+            {/* Lid */}
+            <div className="absolute -top-3 h-8 w-32 -rotate-1 rounded-md bg-[#ffd1dc] shadow-md animate-[lidBounce_1.2s_ease-in-out_infinite]" />
+            {/* Ribbon vertical */}
+            <div className="absolute bottom-0 h-24 w-3 rounded-md bg-[#ffd700]" />
+            {/* Ribbon horizontal */}
+            <div className="absolute bottom-8 h-3 w-28 rounded-md bg-[#ffd700]" />
+            {/* Pop emojis */}
+            <motion.span
+              className="absolute -top-6 text-3xl"
+              initial={{ opacity: 0, y: 0, scale: 0.6 }}
+              animate={{ opacity: [0, 1, 0], y: [-4, -22, -38], scale: [0.6, 1, 1] }}
+              transition={{ duration: 1, repeat: Infinity, repeatDelay: 0.2 }}
+            >
+              🎁
+            </motion.span>
+          </div>
+
+          {/* keyframes for lid and pops */}
+          <style>{`@keyframes lidBounce{0%,100%{transform:translateY(0) rotate(-1deg);}50%{transform:translateY(-8px) rotate(2deg);}}`}</style>
         </motion.div>
       )}
     </AnimatePresence>
@@ -148,7 +173,7 @@ export default function LandingPage() {
     if (showSparkles) return;
     setShowSparkles(true);
     // give sparkles time to play before navigating
-    setTimeout(() => router.push("/birthday"), 1100);
+    setTimeout(() => router.push("/birthday"), 1400);
   };
 
   return (
@@ -168,7 +193,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: "spring", stiffness: 100, damping: 16 }}
-          className="heading-font no-liga mb-8 bg-clip-text text-4xl font-extrabold tracking-tight text-deeppurple drop-shadow-[0_0_18px_rgba(230,230,250,0.65)] sm:text-5xl md:text-6xl"
+          className="heading-font no-liga mb-8 text-4xl font-extrabold tracking-tight text-deeppurple dark:text-white drop-shadow-[0_1px_0_rgba(0,0,0,0.25)] sm:text-5xl md:text-6xl"
         >
           <Typewriter text="Happy Birthday Meryem!💜" speed={55} />
         </motion.h1>

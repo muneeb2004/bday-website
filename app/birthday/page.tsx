@@ -180,9 +180,9 @@ export default function BirthdayPage() {
   } as const;
 
   // Replace this with the real birth year for an accurate age
-  const BIRTH_YEAR = 2003; // TODO: set the correct year
+  const BIRTH_YEAR = 2004; // updated per request
   const BIRTH_MONTH = 11; // 1-12 (aligns with visual display)
-  const BIRTH_DAY = 12;
+  const BIRTH_DAY = 13;
   const today = new Date();
   const birthdayThisYear = new Date(today.getFullYear(), BIRTH_MONTH - 1, BIRTH_DAY);
   let age = today.getFullYear() - BIRTH_YEAR - (today < birthdayThisYear ? 1 : 0);
@@ -216,8 +216,8 @@ export default function BirthdayPage() {
         </button>
       </div>
 
-      {/* hidden audio element: place your audio at public/birthday-song.mp3 */}
-      <audio ref={audioRef} src="/birthday-song.mp3" loop preload="none" />
+  {/* hidden audio element: using provided file at public/bdaymusic.mp3 */}
+  <audio ref={audioRef} src="/bdaymusic.mp3" loop preload="none" />
 
       <main className="relative z-10 mx-auto max-w-5xl px-6 py-16">
         {/* HERO */}
@@ -248,7 +248,7 @@ export default function BirthdayPage() {
             </a>
             <a
               href="/memories"
-              className="btn rounded-full border border-black/10 px-5 py-2 text-center hover:bg-black/5 dark:border-white/15 dark:hover:bg-white/10"
+              className="btn rounded-full bg-periwinkle/25 px-5 py-2 text-center font-semibold text-deeppurple ring-1 ring-periwinkle/60 shadow-[0_2px_10px_rgba(93,63,211,0.25)] hover:bg-periwinkle/35 dark:bg-white/10 dark:text-white dark:ring-white/25 dark:hover:bg-white/15"
             >
               Sweet Moments
             </a>
@@ -261,8 +261,8 @@ export default function BirthdayPage() {
           <motion.section id="birthday-wish" variants={item} className="scroll-mt-24">
             <BirthdayMessage
               title="Your Birthday Wish"
-              message="Meryem, you brighten every room with your kindness and sparkle. Here’s to more wonder, more laughter, and more adventures together — today and always."
-              quotes={[]}
+              message="Happy Birthday Mano!! Hope you have the best bday ever! Really miss our school and college days, making all of this and going through memories drowned me in nostalgia. Made me realize how much we've been through and still here. May you always stay crazy and your inner child stays alive and may we always stay bestfriends! Here’s to more wonder, more laughter, and more memories together — today and always."
+              quotes={["Congrats on surviving another year of adulthood!"]}
               minimal
             />
           </motion.section>
@@ -271,13 +271,13 @@ export default function BirthdayPage() {
 
           {/* Countdown section */}
           <motion.section variants={item} className="rounded-3xl bg-white/60 p-6 shadow-lavender-2xl ring-1 ring-black/5 backdrop-blur dark:bg-black/40 dark:ring-white/10">
-            <h2 className="mb-2 text-center text-2xl font-bold text-deeppurple">Countdown ⏳</h2>
-            <BirthdayCountdown month={10} day={12} quote="Friendship doubles our joy and divides our sorrow." />
+            <h2 className="mb-2 text-center text-2xl font-bold text-deeppurple dark:text-white">Countdown ⏳</h2>
+            <BirthdayCountdown month={10} day={13} quote="Friendship doubles our joy and divides our sorrow." />
           </motion.section>
 
           {/* Final Surprise section */}
           <motion.section variants={item} id="final" className="scroll-mt-24">
-            <FinalSurprise friendName="Meryem" yourName="Your Friend" age={age} />
+            <FinalSurprise friendName="Meryem" yourName="Muneeb" age={21} />
           </motion.section>
         </motion.div>
       </main>
