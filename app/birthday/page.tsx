@@ -66,10 +66,8 @@ function CakeSVG() {
   }));
   return (
     <svg
-      width="360"
-      height="260"
       viewBox="0 0 360 260"
-      className="drop-shadow-[0_8px_32px_rgba(0,0,0,0.15)]"
+      className="w-[min(92vw,360px)] h-auto drop-shadow-[0_8px_32px_rgba(0,0,0,0.15)]"
       aria-label="Animated birthday cake"
     >
       {/* plate */}

@@ -83,6 +83,7 @@
 /* Global defaults */
 html, body {
   min-height: 100%;
+  overflow-x: hidden; /* prevent accidental horizontal scroll on small screens */
 }
 
 html { scroll-behavior: smooth; }
@@ -96,6 +97,10 @@ body {
   background-attachment: fixed;
   background-size: cover;
 }
+
+/* Responsive media defaults */
+img, svg, video, canvas { max-width: 100%; height: auto; }
+picture { display: block; max-width: 100%; }
 
 /* Heading font */
 h1, h2, h3, .heading-font {

@@ -235,7 +235,7 @@ function Polaroid({ photo, index, onOpen }: { photo: MemoryPhoto; index: number;
             </motion.span>
           ))}
         </div>
-        <div className="mt-2 text-center text-sm text-black font-[var(--font-handwritten),cursive]">
+        <div className="mt-2 text-center text-sm text-black wrap-break-word font-[var(--font-handwritten),cursive]">
           {photo.caption}
         </div>
       </div>
